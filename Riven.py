@@ -1,12 +1,11 @@
-import discord
-from discord.ext import commands
-from discord.ext.commands import Bot
-import asyncio
 import random
 import time
-import bs4
+import discord
+from discord.ext.commands import Bot
+from bs4 import BeautifulSoup
+import SecretToken
 
-token = 'insert token here'
+token = SecretToken.get_token()
 client = Bot(description='description', command_prefix='r!')
 client.remove_command("help")
 
@@ -27,12 +26,17 @@ async def ping(ctx):
     ping = (time.time() - pingtime) * 1000
     await client.edit_message(pingms, "Pong! It took `%dms`" % ping)
 
+
 @client.command(pass_context=True)
 async def map(ctx):
-    embed = discord.Embed(title="Who needs a map?",
+    author = ctx.message.author.name
+    maps = [1, 10, 11, 12]
+    map_id = random.choice(maps)
+    embed = discord.Embed(title=f"Who needs a map? {author} does.",
                           color=0x099706)
-    embed.set_image(url="http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map1.png")
+    embed.set_image(url=f"http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map{map_id}.png")
     await client.say(embed=embed)
+
 
 @client.command(pass_context=True, aliases=['say'])
 async def echo(ctx, *msg):
@@ -40,9 +44,11 @@ async def echo(ctx, *msg):
     await client.delete_message(ctx.message)
     return await client.say(say)
 
+
 '''
-commands todo: insult, randomability, randomchampion, champion, championability, championstats
+commands todo: insult, randomability, randomchampion, champion, championability, championstats 
 '''
+
 
 @client.command(pass_context=True)
 async def help(ctx):
@@ -50,8 +56,14 @@ async def help(ctx):
                           description=
                           "r!ping: Pings the bot.\n"
                           "r!insult: A random champion will taunt you back.\n"
-                          "r!something: Prints a random command.\n"
-                          "\nThere's hidden commands too~~Teehee")
+                          "r!random: Prints a random command.\n"
+                          "r!insult: Insults you back.\n"
+                          "r!randomability: Prints a randomn ability\n"
+                          "randomchampion:\n"
+                          "champion:\n"
+                          "championability:\n"
+                          "championstats:\n"
+                          "There's hidden commands too~~\n")
     await client.say(embed=embed)
 
 
